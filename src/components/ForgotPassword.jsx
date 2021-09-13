@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react"
 import { Form, Button, Card, Alert } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext"
 import { Link } from "react-router-dom"
+import Spinner from './Spinner'
 
 export default function ForgotPassword() {
   const emailRef = useRef()
@@ -18,9 +19,9 @@ export default function ForgotPassword() {
       setError("")
       setLoading(true)
       await resetPassword(emailRef.current.value)
-      setMessage("Check your inbox for further instructions")
+      setMessage("Password Reset Link send to Email")
     } catch {
-      setError("Failed to reset password")
+      setError("Invalid Email")
     }
 
     setLoading(false)
@@ -34,12 +35,18 @@ export default function ForgotPassword() {
                 <div className="card-heading text-primary">Eagle Password Reset</div>
               </div>
               <div className="card-body p-lg-5">
+                {message && (<div className="alert alert-success" role="alert">
+                  {message}
+                </div>)}
+              {error && (<div className="alert alert-danger" role="alert">
+                  {error}
+                </div>)}
                 <form  onSubmit={handleSubmit}>
                   <div className="form-floating mb-3">
                     <label >Email address</label>
                     <input className="form-control" ref={emailRef} type="email" placeholder="name@example.com"  required />
                   </div>
-                  <button className="btn btn-primary" type="submit">Reset Password</button>
+                  { loading ? <Spinner /> : <button className="btn btn-primary" type="submit">Reset Password</button>}
                 </form>
               </div>
               <div className="d-flex flex-row align-items-center justify-content-center pb-1" style={{gap: "1rem"}}>

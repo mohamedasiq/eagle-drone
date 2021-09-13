@@ -1,14 +1,14 @@
 import React, { useRef, useState } from "react"
-import { Form, Button, Card, Alert } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext"
 import { Link, useHistory } from "react-router-dom"
+import Spinner from './Spinner'
 
 export default function UpdateProfile() {
   const emailRef = useRef()
   const passwordRef = useRef()
   const passwordConfirmRef = useRef()
   const nameRef = useRef()
-  const roleRef = useRef()
+  const positionRef = useRef()
   const contactRef = useRef()
   const { currentUser, updatePassword, updateEmail, updateDetails, userData } = useAuth()
   const [error, setError] = useState("")
@@ -32,7 +32,7 @@ export default function UpdateProfile() {
       promises.push(updatePassword(passwordRef.current.value))
     }
 
-    promises.push(updateDetails(emailRef.current.value,nameRef.current.value,roleRef.current.value))
+    promises.push(updateDetails(emailRef.current.value,nameRef.current.value,positionRef.current.value,contactRef.current.value))
 
     Promise.all(promises)
       .then(() => {
@@ -55,6 +55,9 @@ export default function UpdateProfile() {
               </div>
               <div className="card-body p-lg-5">
                 <h3 className="mb-4">Update your Eagle</h3>
+                {error && (<div className="alert alert-danger" role="alert">
+                  {error}
+                </div>)}
                 <form onSubmit={handleSubmit}>
                   <div className="form-floating mb-3">
                     <label >Email address</label>
@@ -62,11 +65,11 @@ export default function UpdateProfile() {
                   </div>
                   <div className="form-floating mb-3">
                     <label >Password</label>
-                    <input className="form-control" ref={passwordRef} type="password"  required />
+                    <input className="form-control" ref={passwordRef} type="password" defaultValue={currentUser.password}  required />
                   </div>
                   <div className="form-floating mb-3">
                     <label >Password Confirmation</label>
-                    <input className="form-control" ref={passwordConfirmRef} type="password"  required />
+                    <input className="form-control" ref={passwordConfirmRef} type="password" defaultValue={currentUser.password}  required />
                   </div>
                   <div className="form-floating mb-3">
                     <label >Name</label>
@@ -74,14 +77,14 @@ export default function UpdateProfile() {
                   </div>
                   <div className="form-floating mb-3">
                     <label >Role</label>
-                    <input className="form-control" ref={roleRef} type="text" placeholder="Flying" defaultValue={userData.position} required />
+                    <input className="form-control" ref={positionRef} type="text" placeholder="Flying" defaultValue={userData.position} required />
                   </div>
                   <div className="form-floating mb-3">
                     <label >Contact No</label>
                     <input className="form-control" ref={contactRef} type="number" placeholder="+91" defaultValue={userData.contact} required />
                   </div>
                   <div className="form-group">
-                    <button className="btn btn-primary" type="submit" name="registerSubmit">Update</button>
+                  { loading ? <Spinner /> : <button className="btn btn-primary" type="submit" name="registerSubmit">Update</button>}
                   </div>
                 </form>
               </div>

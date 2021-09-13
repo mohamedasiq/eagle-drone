@@ -40,14 +40,15 @@ export function AuthProvider({ children }) {
     return currentUser.updatePassword(password)
   }
 
-  function updateDetails(email,name,position) {
+  function updateDetails(email,name,position,contact) {
     return db.collection("userDetails").doc(email).update({
       "fullname": name,
       "position": position,
-      "role": userData && userData.role,
-      "contact": userData && userData.contact
+      "contact": contact,
+      "role": userData.role
+      
   }).then(() => {
-    setUserData({fullname: name, position: role})
+    setUserData({fullname: name, position: position,contact: contact,role: userData.role})
   })
   }
 
